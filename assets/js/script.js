@@ -1,13 +1,11 @@
 const newsContainer = document.getElementById('news-container');
 const paginationContainer = document.getElementById('pagination-container');
-const topStoriesURL = 'https://hacker-news.firebaseio.com/v0/topstories.json';
 
 let topStoriesList = [];
 
 dayjs.extend(dayjs_plugin_relativeTime);
 
 function renderStory(story) {
-  console.log('story', story);
   return new Promise((resolve, reject) => {
     return resolve(`<div class="column">
       <div class="ui flat card">
@@ -29,23 +27,18 @@ function renderStory(story) {
   });
 }
 
-function renderPagination() {
+function renderPagination(pageNum) {
   return new Promise((resolve, reject) => {
+    // let pagesCount = topStoriesList.length/30;
     return resolve(`<div class="ui pagination menu">
-      <a class="active item">
-      1
+      <a class="item">
+      &lt
       </a>
-      <div class="disabled item">
-      ...
+      <div class="active item">
+      ${pageNum}
       </div>
       <a class="item">
-      10
-      </a>
-      <a class="item">
-      11
-      </a>
-      <a class="item">
-      12
+      &gt
       </a>
       </div>`);
   });
@@ -72,8 +65,42 @@ function renderTheseStories(stories, skip, limit) {
   });
 }
 
-function getTopStories() {
-  fetch(topStoriesURL)
+function renderThese(type) {
+  console.log('alert');
+  switch (type) {
+    case 'askstories':
+    getTopStories(`https://hacker-news.firebaseio.com/v0/askstories.json`);
+    break;
+
+    case 'showstories':
+    getTopStories(`https://hacker-news.firebaseio.com/v0/showstories.json`);
+    break;
+
+    case 'jobstories':
+    getTopStories(`https://hacker-news.firebaseio.com/v0/jobstories.json`);
+    break;
+
+    case 'topstories':
+    getTopStories(`https://hacker-news.firebaseio.com/v0/topstories.json`);
+    break;
+
+    case 'newstories':
+    getTopStories(`https://hacker-news.firebaseio.com/v0/newstories.json`);
+    break;
+
+    case 'beststories':
+    getTopStories(`https://hacker-news.firebaseio.com/v0/beststories.json`);
+    break;
+
+    default:
+    getTopStories(`https://hacker-news.firebaseio.com/v0/jobstories.json`);
+    break;
+  }
+}
+
+function getTopStories(url) {
+console.log('url', url);
+  fetch(url)
   .then((res) => {
     return res.json();
   })
@@ -83,15 +110,20 @@ function getTopStories() {
   })
   .then((storiesRendered) => {
     newsContainer.innerHTML = storiesRendered.join('');
-    return renderPagination();
+    return renderPagination(1);
   })
-  .then(paginationRendered => {
-    console.log('paginationRendered', paginationRendered);
+  .then((paginationRendered) => {
+    // console.log('paginationRendered', paginationRendered);
     paginationContainer.innerHTML = paginationRendered;
   })
   .catch((err) => {
-    console.log('err', err);
+    console.error('err', err);
   });
 }
 
-getTopStories();
+document.addEventListener('DOMContentLoaded', function() {
+  // renderThese('askstories');
+  renderThese('topstories');
+  // renderThese('jobstories');
+});
+
