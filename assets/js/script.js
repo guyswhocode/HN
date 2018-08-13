@@ -11,7 +11,7 @@ function renderStory(story) {
     return resolve(`<div class="column">
       <div class="ui flat card">
       <div class="content">
-      <a class="header">${story.title}</a>
+      <a href="${story.url}" target="_blank" class="header">${story.title}</a>
       <div class="meta">
       <span class="date">${story.by}</span>
       </div>
@@ -126,12 +126,12 @@ document.addEventListener('DOMContentLoaded', function() {
   renderThese('topstories');
 });
 
-
 function getThisFeed() {
-  console.log(this.getAttribute('data-feedtype'));
   renderThese(this.getAttribute('data-feedtype'));
+  document.querySelector('.ui.small.teal.label').setAttribute('class', 'ui small label');
+  this.querySelector('.label').setAttribute('class', 'ui small teal label');
 }
 
 feedTypes.forEach((feed) => {
-     feed.addEventListener('click', getThisFeed, false);
+ feed.addEventListener('click', getThisFeed, false);
 });
