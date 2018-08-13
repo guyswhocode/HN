@@ -1,41 +1,62 @@
-let newsContainer = document.getElementById('news-container');
+const newsContainer = document.getElementById('news-container');
+const paginationContainer = document.getElementById('pagination-container');
 const topStoriesURL = 'https://hacker-news.firebaseio.com/v0/topstories.json';
+
 let topStoriesList = [];
-// timeago().format(1473245023718);
+
+dayjs.extend(dayjs_plugin_relativeTime);
 
 function renderStory(story) {
   console.log('story', story);
   return new Promise((resolve, reject) => {
-    return resolve(`<div class="ui card">
+    return resolve(`<div class="column">
+      <div class="ui flat card">
       <div class="content">
       <a class="header">${story.title}</a>
       <div class="meta">
       <span class="date">${story.by}</span>
       </div>
       </div>
-      <div class="content">
+      <div class="extra content">
       <span class="right floated">
-      ${story.type}
+      ${dayjs(story.time).fromNow()} in <i>${story.type}</i> 
       </span>
       <i class="star icon"></i>
       ${story.score}
+      </div>
       </div>
       </div>`);
   });
 }
 
-function renderSampleCards(n) {
-  let data = '';
-  for (let i = 0; i < n; i++) data += renderStory();
-    return data;
+function renderPagination() {
+  return new Promise((resolve, reject) => {
+    return resolve(`<div class="ui pagination menu">
+      <a class="active item">
+      1
+      </a>
+      <div class="disabled item">
+      ...
+      </div>
+      <a class="item">
+      10
+      </a>
+      <a class="item">
+      11
+      </a>
+      <a class="item">
+      12
+      </a>
+      </div>`);
+  });
 }
 
 function getStory(storyId) {
   return fetch(`https://hacker-news.firebaseio.com/v0/item/${storyId}.json`)
-  .then(res => {
+  .then((res) => {
     return res.json();
   })
-  .then(dataParsed => {
+  .then((dataParsed) => {
     return renderStory(dataParsed);
   });
 }
@@ -43,29 +64,32 @@ function getStory(storyId) {
 function renderTheseStories(stories, skip, limit) {
   stories = stories.slice(skip, skip + limit);
   let storyPromises = [];
-  stories.forEach(storyId => {
+  stories.forEach((storyId) => {
     storyPromises.push(getStory(storyId));
   });
-  return Promise.all(storyPromises).then(response => {
+  return Promise.all(storyPromises).then((response) => {
     return response;
   });
 }
 
 function getTopStories() {
   fetch(topStoriesURL)
-  .then(res => {
+  .then((res) => {
     return res.json();
   })
-  .then(storyList => {
+  .then((storyList) => {
     topStoriesList = storyList;
     return renderTheseStories(topStoriesList, 15, 15);
   })
-  .then(storiesRendered => {
-    console.log('storiesRendered.join()', storiesRendered.join(''));
-    console.log('storiesRendered.join()', storiesRendered);
+  .then((storiesRendered) => {
     newsContainer.innerHTML = storiesRendered.join('');
+    return renderPagination();
   })
-  .catch(err => {
+  .then(paginationRendered => {
+    console.log('paginationRendered', paginationRendered);
+    paginationContainer.innerHTML = paginationRendered;
+  })
+  .catch((err) => {
     console.log('err', err);
   });
 }
