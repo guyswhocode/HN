@@ -1,5 +1,6 @@
 const newsContainer = document.getElementById('news-container');
 const paginationContainer = document.getElementById('pagination-container');
+const feedTypes = document.querySelectorAll('[data-feedtype]');
 
 let topStoriesList = [];
 
@@ -122,8 +123,15 @@ console.log('url', url);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  // renderThese('askstories');
   renderThese('topstories');
-  // renderThese('jobstories');
 });
 
+
+function getThisFeed() {
+  console.log(this.getAttribute('data-feedtype'));
+  renderThese(this.getAttribute('data-feedtype'));
+}
+
+feedTypes.forEach((feed) => {
+     feed.addEventListener('click', getThisFeed, false);
+});
