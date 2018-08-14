@@ -116,6 +116,7 @@ console.log('url', url);
   .then((paginationRendered) => {
     // console.log('paginationRendered', paginationRendered);
     paginationContainer.innerHTML = paginationRendered;
+    document.getElementsByClassName('loading')[0].setAttribute('class', 'loaded');
   })
   .catch((err) => {
     console.error('err', err);
@@ -128,6 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function getThisFeed() {
   renderThese(this.getAttribute('data-feedtype'));
+  document.getElementsByClassName('loaded')[0].setAttribute('class', 'loading');
   document.querySelector('.ui.small.teal.label').setAttribute('class', 'ui small label');
   this.querySelector('.label').setAttribute('class', 'ui small teal label');
 }
