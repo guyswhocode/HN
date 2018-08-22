@@ -1,10 +1,11 @@
-.loaded {
+.loading {
   height: 4px;
   width: 100%;
   position: relative;
   overflow: hidden;
-  background-color: #ddd;
+  background-color: #efefef;
 }
+
 .loader {
   height: 4px;
   width: 100%;
