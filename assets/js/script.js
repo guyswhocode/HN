@@ -1,6 +1,16 @@
 const newsContainer = document.getElementById('news-container');
 const paginationContainer = document.getElementById('pagination-container');
 const feedTypes = document.querySelectorAll('[data-feedtype]');
+const topStoriesContainer = document.getElementById('top-stories');
+
+const sampleStoryData = {
+  url: 'sample-url',
+  title: 'Sample title',
+  by: 'Author',
+  time: new Date(),
+  type: 'story',
+  score: 124
+};
 
 let topStoriesList = [];
 
@@ -9,7 +19,7 @@ dayjs.extend(dayjs_plugin_relativeTime);
 function renderStory(story) {
   return new Promise((resolve, reject) => {
     return resolve(`<div class="column">
-      <div class="ui flat card">
+      <div class="ui flat fluid card">
       <div class="content">
       <a href="${story.url}" target="_blank" class="header">${story.title}</a>
       <div class="meta">
@@ -18,7 +28,7 @@ function renderStory(story) {
       </div>
       <div class="extra content">
       <span class="right floated">
-      ${dayjs(story.time).fromNow()} in <i>${story.type}</i> 
+      ${ story.type.charAt(0).toUpperCase() + story.type.substr(1) } 
       </span>
       <i class="star icon"></i>
       ${story.score}
@@ -107,7 +117,7 @@ console.log('url', url);
   })
   .then((storyList) => {
     topStoriesList = storyList;
-    return renderTheseStories(topStoriesList, 15, 15);
+    return renderTheseStories(topStoriesList, 0, 30);
   })
   .then((storiesRendered) => {
     newsContainer.innerHTML = storiesRendered.join('');
@@ -116,7 +126,7 @@ console.log('url', url);
   .then((paginationRendered) => {
     // console.log('paginationRendered', paginationRendered);
     paginationContainer.innerHTML = paginationRendered;
-    document.getElementsByClassName('loading')[0].setAttribute('class', 'loaded');
+    document.getElementsByClassName('loader')[0].setAttribute('class', 'loading');
   })
   .catch((err) => {
     console.error('err', err);
@@ -125,15 +135,26 @@ console.log('url', url);
 
 document.addEventListener('DOMContentLoaded', function() {
   renderThese('topstories');
+  let sampleStories = [renderStory(sampleStoryData),renderStory(sampleStoryData)];
+  console.log('sampleStories', sampleStories);
+  Promise.all(sampleStories)
+  .then(sampleData => {
+    topStoriesContainer.innerHTML = sampleData.join('');
+  })
+  .catch(error => {
+    console.log('sample data error', error);
+  });
+  
+  feedTypes.forEach((feed) => {
+   feed.addEventListener('click', getThisFeed, false);
+  });
+
 });
 
 function getThisFeed() {
   renderThese(this.getAttribute('data-feedtype'));
-  document.getElementsByClassName('loaded')[0].setAttribute('class', 'loading');
-  document.querySelector('.ui.small.teal.label').setAttribute('class', 'ui small label');
-  this.querySelector('.label').setAttribute('class', 'ui small teal label');
+  document.getElementsByClassName('loading')[0].setAttribute('class', 'loader');
+  document.querySelector('.ui.small.gwc-green.label').setAttribute('class', 'ui small label');
+  this.querySelector('.label').setAttribute('class', 'ui small gwc-green label');
 }
 
-feedTypes.forEach((feed) => {
- feed.addEventListener('click', getThisFeed, false);
-});
