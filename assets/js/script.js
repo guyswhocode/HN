@@ -62,6 +62,9 @@ function getStory(storyId) {
   })
   .then((dataParsed) => {
     return renderStory(dataParsed);
+  })
+  .catch(error => {
+    console.log('getStory error', error);
   });
 }
 
@@ -73,76 +76,93 @@ function renderTheseStories(stories, skip, limit) {
   });
   return Promise.all(storyPromises).then((response) => {
     return response;
+  })
+  .catch(error => {
+    console.log('renderTheseStories err', error);
   });
 }
 
-function renderThese(type) {
-  console.log('alert');
-  switch (type) {
-    case 'askstories':
-    getTopStories(`https://hacker-news.firebaseio.com/v0/askstories.json`);
-    break;
-
-    case 'showstories':
-    getTopStories(`https://hacker-news.firebaseio.com/v0/showstories.json`);
-    break;
-
-    case 'jobstories':
-    getTopStories(`https://hacker-news.firebaseio.com/v0/jobstories.json`);
-    break;
-
-    case 'topstories':
-    getTopStories(`https://hacker-news.firebaseio.com/v0/topstories.json`);
-    break;
-
-    case 'newstories':
-    getTopStories(`https://hacker-news.firebaseio.com/v0/newstories.json`);
-    break;
-
-    case 'beststories':
-    getTopStories(`https://hacker-news.firebaseio.com/v0/beststories.json`);
-    break;
-
-    default:
-    getTopStories(`https://hacker-news.firebaseio.com/v0/jobstories.json`);
-    break;
-  }
-}
-
-function getTopStories(url) {
-console.log('url', url);
-  fetch(url)
+function getStories(url, skip = 0, limit = 30) {
+  return fetch(url)
   .then((res) => {
     return res.json();
   })
   .then((storyList) => {
     topStoriesList = storyList;
-    return renderTheseStories(topStoriesList, 0, 30);
+    return renderTheseStories(topStoriesList, skip, limit);
   })
   .then((storiesRendered) => {
     newsContainer.innerHTML = storiesRendered.join('');
     return renderPagination(1);
   })
   .then((paginationRendered) => {
-    // console.log('paginationRendered', paginationRendered);
+    console.log('sr', paginationRendered);
     paginationContainer.innerHTML = paginationRendered;
+    if(document.getElementsByClassName('loader')[0])
     document.getElementsByClassName('loader')[0].setAttribute('class', 'loading');
   })
   .catch((err) => {
-    console.error('err', err);
+    console.error('getStories err', err);
   });
 }
 
+function renderThese(type) {
+  switch (type) {
+    case 'askstories':
+    getStories(`https://hacker-news.firebaseio.com/v0/askstories.json`);
+    break;
+
+    case 'showstories':
+    getStories(`https://hacker-news.firebaseio.com/v0/showstories.json`);
+    break;
+
+    case 'jobstories':
+    getStories(`https://hacker-news.firebaseio.com/v0/jobstories.json`);
+    break;
+
+    case 'topstories':
+    getStories(`https://hacker-news.firebaseio.com/v0/topstories.json`);
+    break;
+
+    case 'newstories':
+    getStories(`https://hacker-news.firebaseio.com/v0/newstories.json`);
+    break;
+
+    case 'beststories':
+    getStories(`https://hacker-news.firebaseio.com/v0/beststories.json`);
+    break;
+
+    default:
+    getStories(`https://hacker-news.firebaseio.com/v0/jobstories.json`);
+    break;
+  }
+}
+
+function getThisFeed() {
+  renderThese(this.getAttribute('data-feedtype'));
+  document.getElementsByClassName('loading')[0].setAttribute('class', 'loader');
+  document.querySelector('.ui.small.gwc-green.label').setAttribute('class', 'ui small label');
+  this.querySelector('.label').setAttribute('class', 'ui small gwc-green label');
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-  renderThese('topstories');
-  let sampleStories = [renderStory(sampleStoryData),renderStory(sampleStoryData)];
-  console.log('sampleStories', sampleStories);
-  Promise.all(sampleStories)
-  .then(sampleData => {
-    topStoriesContainer.innerHTML = sampleData.join('');
+  // renderThese('topstories');
+  // let sampleStories = [renderStory(sampleStoryData),renderStory(sampleStoryData)];
+  // console.log('sampleStories', sampleStories);
+  // Promise.all(sampleStories)
+  // .then(sampleData => {
+  //   topStoriesContainer.innerHTML = sampleData.join('');
+  // })
+  // .catch(error => {
+  //   console.log('sample data error', error);
+  // });
+
+  getStories('https://hacker-news.firebaseio.com/v0/topstories.json', 0, 2)
+  .then(topStoriesRendered => {
+    console.log('topStoriesRendered', topStoriesRendered);
   })
   .catch(error => {
-    console.log('sample data error', error);
+    console.log('error', error);
   });
   
   feedTypes.forEach((feed) => {
@@ -151,10 +171,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-function getThisFeed() {
-  renderThese(this.getAttribute('data-feedtype'));
-  document.getElementsByClassName('loading')[0].setAttribute('class', 'loader');
-  document.querySelector('.ui.small.gwc-green.label').setAttribute('class', 'ui small label');
-  this.querySelector('.label').setAttribute('class', 'ui small gwc-green label');
-}
 
