@@ -3,14 +3,14 @@ const paginationContainer = document.getElementById('pagination-container');
 const feedTypes = document.querySelectorAll('[data-feedtype]');
 const topStoriesContainer = document.getElementById('top-stories');
 
-const sampleStoryData = {
-  url: 'sample-url',
-  title: 'Sample title',
-  by: 'Author',
-  time: new Date(),
-  type: 'story',
-  score: 124
-};
+// const sampleStoryData = {
+//   url: 'sample-url',
+//   title: 'Sample title',
+//   by: 'Author',
+//   time: new Date(),
+//   type: 'story',
+//   score: 124,
+// };
 
 let topStoriesList = [];
 
@@ -63,7 +63,7 @@ function getStory(storyId) {
   .then((dataParsed) => {
     return renderStory(dataParsed);
   })
-  .catch(error => {
+  .catch((error) => {
     console.log('getStory error', error);
   });
 }
@@ -77,7 +77,7 @@ function renderTheseStories(stories, skip, limit) {
   return Promise.all(storyPromises).then((response) => {
     return response;
   })
-  .catch(error => {
+  .catch((error) => {
     console.log('renderTheseStories err', error);
   });
 }
@@ -98,8 +98,9 @@ function getStories(url, skip = 0, limit = 30) {
   .then((paginationRendered) => {
     console.log('sr', paginationRendered);
     paginationContainer.innerHTML = paginationRendered;
-    if(document.getElementsByClassName('loader')[0])
-    document.getElementsByClassName('loader')[0].setAttribute('class', 'loading');
+    if (document.getElementsByClassName('loader')[0]) {
+document.getElementsByClassName('loader')[0].setAttribute('class', 'loading');
+}
   })
   .catch((err) => {
     console.error('getStories err', err);
@@ -146,29 +147,28 @@ function getThisFeed() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  // renderThese('topstories');
-  // let sampleStories = [renderStory(sampleStoryData),renderStory(sampleStoryData)];
-  // console.log('sampleStories', sampleStories);
-  // Promise.all(sampleStories)
-  // .then(sampleData => {
-  //   topStoriesContainer.innerHTML = sampleData.join('');
-  // })
-  // .catch(error => {
-  //   console.log('sample data error', error);
-  // });
-
-  getStories('https://hacker-news.firebaseio.com/v0/topstories.json', 0, 2)
-  .then(topStoriesRendered => {
+  return fetch(`https://hacker-news.firebaseio.com/v0/topstories.json`)
+  .then((res) => {
+    return res.json();
+  })
+  .then((topStories) => {
+    let sampleStories = [getStory(topStories[0]), getStory(topStories[1])];
+    return Promise.all(sampleStories);
+  })
+  .then((sampleData) => {
+    topStoriesContainer.innerHTML = sampleData.join('');
+    return getStories('https://hacker-news.firebaseio.com/v0/newstories.json', 0, 30);
+  })
+  .then((topStoriesRendered) => {
     console.log('topStoriesRendered', topStoriesRendered);
   })
-  .catch(error => {
+  .catch((error) => {
     console.log('error', error);
   });
-  
+
   feedTypes.forEach((feed) => {
    feed.addEventListener('click', getThisFeed, false);
   });
-
 });
 
 
