@@ -161,13 +161,12 @@ document.addEventListener('DOMContentLoaded', function() {
   })
   .then((topStoriesRendered) => {
     console.log('topStoriesRendered', topStoriesRendered);
+    feedTypes.forEach((feed) => {
+     feed.addEventListener('click', getThisFeed, false);
+    });
   })
   .catch((error) => {
     console.log('error', error);
-  });
-
-  feedTypes.forEach((feed) => {
-   feed.addEventListener('click', getThisFeed, false);
   });
 });
 
