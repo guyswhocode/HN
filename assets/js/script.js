@@ -42,13 +42,13 @@ function renderPagination(pageNum) {
   return new Promise((resolve, reject) => {
     // let pagesCount = topStoriesList.length/30;
     return resolve(`<div class="ui pagination menu">
-      <a class="item">
+      <a class="item" onClick="renderPreviousPage()">
       &lt
       </a>
       <div class="active item">
       ${pageNum}
       </div>
-      <a class="item">
+      <a class="item" onClick="renderNextPage()">
       &gt
       </a>
       </div>`);
