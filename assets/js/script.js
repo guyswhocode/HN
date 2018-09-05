@@ -147,14 +147,18 @@ function renderThese(type, page = 1) {
 
 function getThisFeed() {
   currentPage = 1;
-  renderThese(this.getAttribute('data-feedtype'), currentPage);
   document.getElementsByClassName('loading')[0].setAttribute('class', 'loader');
+  renderThese(this.getAttribute('data-feedtype'), currentPage)
+  .then(renderCompleted => {
+    document.getElementsByClassName('loader')[0].setAttribute('class', 'loading');
+  });
   document.querySelector('.ui.small.gwc-green.label').setAttribute('class', 'ui small label');
   this.querySelector('.label').setAttribute('class', 'ui small gwc-green label');
 }
 
 function renderNextPage() { // eslint-disable-line no-unused-vars
   currentPage += 1;
+  document.getElementsByClassName('loading')[0].setAttribute('class', 'loader');
   renderThese(currentCategoty, currentPage)
   .then((rendered) => {
     console.log('currentPage', currentPage);
@@ -162,17 +166,20 @@ function renderNextPage() { // eslint-disable-line no-unused-vars
   })
   .then((paginationDone) => {
     console.log('Pagination success');
+    document.getElementsByClassName('loader')[0].setAttribute('class', 'loading');
   });
 }
 
 function renderPreviousPage() { // eslint-disable-line no-unused-vars
   currentPage -= 1;
+  document.getElementsByClassName('loading')[0].setAttribute('class', 'loader');
   renderThese(currentCategoty, currentPage)
   .then((rendered) => {
     return renderPagination(currentPage);
   })
   .then((paginationDone) => {
     console.log('Pagination success');
+    document.getElementsByClassName('loader')[0].setAttribute('class', 'loading');
   });
 }
 
