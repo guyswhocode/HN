@@ -55,6 +55,9 @@ function renderPagination(pageNum) {
       &gt
       </a>
       </div>`);
+  })
+  .then((paginationRendered) => {
+    paginationContainer.innerHTML = paginationRendered;
   });
 }
 
@@ -99,8 +102,6 @@ function getStories(url, skip = 0, limit = 30) {
     return renderPagination(1);
   })
   .then((paginationRendered) => {
-    console.log('sr', paginationRendered);
-    paginationContainer.innerHTML = paginationRendered;
     if (document.getElementsByClassName('loader')[0]) {
       document.getElementsByClassName('loader')[0].setAttribute('class', 'loading');
     }
@@ -115,31 +116,31 @@ function renderThese(type, page = 1) {
   let skip = (page - 1) * 30;
   switch (type) {
     case 'askstories':
-    getStories(`https://hacker-news.firebaseio.com/v0/askstories.json`, skip, limit);
+    return getStories(`https://hacker-news.firebaseio.com/v0/askstories.json`, skip, limit);
     break;
 
     case 'showstories':
-    getStories(`https://hacker-news.firebaseio.com/v0/showstories.json`, skip, limit);
+    return getStories(`https://hacker-news.firebaseio.com/v0/showstories.json`, skip, limit);
     break;
 
     case 'jobstories':
-    getStories(`https://hacker-news.firebaseio.com/v0/jobstories.json`, skip, limit);
+    return getStories(`https://hacker-news.firebaseio.com/v0/jobstories.json`, skip, limit);
     break;
 
     case 'topstories':
-    getStories(`https://hacker-news.firebaseio.com/v0/topstories.json`, skip, limit);
+    return getStories(`https://hacker-news.firebaseio.com/v0/topstories.json`, skip, limit);
     break;
 
     case 'newstories':
-    getStories(`https://hacker-news.firebaseio.com/v0/newstories.json`, skip, limit);
+    return getStories(`https://hacker-news.firebaseio.com/v0/newstories.json`, skip, limit);
     break;
 
     case 'beststories':
-    getStories(`https://hacker-news.firebaseio.com/v0/beststories.json`, skip, limit);
+    return getStories(`https://hacker-news.firebaseio.com/v0/beststories.json`, skip, limit);
     break;
 
     default:
-    getStories(`https://hacker-news.firebaseio.com/v0/jobstories.json`, skip, limit);
+    return getStories(`https://hacker-news.firebaseio.com/v0/jobstories.json`, skip, limit);
     break;
   }
 }
@@ -154,12 +155,25 @@ function getThisFeed() {
 
 function renderNextPage() { // eslint-disable-line no-unused-vars
   currentPage += 1;
-  renderThese(currentCategoty, currentPage);
+  renderThese(currentCategoty, currentPage)
+  .then((rendered) => {
+    console.log('currentPage', currentPage);
+    return renderPagination(currentPage);
+  })
+  .then((paginationDone) => {
+    console.log('Pagination success');
+  });
 }
 
 function renderPreviousPage() { // eslint-disable-line no-unused-vars
- currentPage -= 1;
- renderThese(currentCategoty, currentPage);
+  currentPage -= 1;
+  renderThese(currentCategoty, currentPage)
+  .then((rendered) => {
+    return renderPagination(currentPage);
+  })
+  .then((paginationDone) => {
+    console.log('Pagination success');
+  });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
