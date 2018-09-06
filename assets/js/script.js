@@ -21,7 +21,7 @@ dayjs.extend(dayjs_plugin_relativeTime);
 
 function renderStory(story) {
   return new Promise((resolve, reject) => {
-    return resolve(`<div class="column">
+    return resolve(`<div class="column animated fadeInUp">
       <div class="ui flat fluid card">
       <div class="content">
       <a href="${story.url}" target="_blank" class="header">${story.title}</a>
