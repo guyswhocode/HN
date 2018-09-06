@@ -104,6 +104,7 @@ function getStories(url, skip = 0, limit = 30) {
   .then((paginationRendered) => {
     if (document.getElementsByClassName('loader')[0]) {
       document.getElementsByClassName('loader')[0].setAttribute('class', 'loading');
+      window.scrollTo(0, 0);
     }
   })
   .catch((err) => {
@@ -149,8 +150,9 @@ function getThisFeed() {
   currentPage = 1;
   document.getElementsByClassName('loading')[0].setAttribute('class', 'loader');
   renderThese(this.getAttribute('data-feedtype'), currentPage)
-  .then(renderCompleted => {
+  .then((renderCompleted) => {
     document.getElementsByClassName('loader')[0].setAttribute('class', 'loading');
+    window.scrollTo(0, 0);
   });
   document.querySelector('.ui.small.gwc-green.label').setAttribute('class', 'ui small label');
   this.querySelector('.label').setAttribute('class', 'ui small gwc-green label');
@@ -167,6 +169,7 @@ function renderNextPage() { // eslint-disable-line no-unused-vars
   .then((paginationDone) => {
     console.log('Pagination success');
     document.getElementsByClassName('loader')[0].setAttribute('class', 'loading');
+    window.scrollTo(0, 0);
   });
 }
 
@@ -180,6 +183,7 @@ function renderPreviousPage() { // eslint-disable-line no-unused-vars
   .then((paginationDone) => {
     console.log('Pagination success');
     document.getElementsByClassName('loader')[0].setAttribute('class', 'loading');
+    window.scrollTo(0, 0);
   });
 }
 
