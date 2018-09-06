@@ -154,8 +154,10 @@ function getThisFeed() {
     document.getElementsByClassName('loader')[0].setAttribute('class', 'loading');
     window.scrollTo(0, 0);
   });
+  document.querySelector('.ui.fluid.vertical.menu > .active.item').setAttribute('class', 'item');
   document.querySelector('.ui.small.gwc-green.label').setAttribute('class', 'ui small label');
   this.querySelector('.label').setAttribute('class', 'ui small gwc-green label');
+  this.setAttribute('class', 'active item');
 }
 
 function renderNextPage() { // eslint-disable-line no-unused-vars
