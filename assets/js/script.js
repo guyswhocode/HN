@@ -235,14 +235,16 @@ function renderPreviousPage() { // eslint-disable-line no-unused-vars
     return renderPagination(currentPage);
   })
   .then((paginationDone) => {
-    console.log('Pagination success');
     document.getElementsByClassName('loader')[0].setAttribute('class', 'loading');
     window.scrollTo(0, 0);
   });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  return fetch(`https://hacker-news.firebaseio.com/v0/topstories.json`)
+  updateNavigation()
+  .then(updatedNavigation => {
+    return fetch(`https://hacker-news.firebaseio.com/v0/topstories.json`)
+  })
   .then((res) => {
     return res.json();
   })
@@ -252,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function() {
   })
   .then((sampleData) => {
     topStoriesContainer.innerHTML = sampleData.join('');
-    return renderThese('https://hacker-news.firebaseio.com/v0/newstories.json', 1);
+    return renderThese('newstories', 1);
   })
   .then((topStoriesRendered) => {
     console.log('topStoriesRendered', topStoriesRendered);
