@@ -21,7 +21,8 @@ dayjs.extend(dayjs_plugin_relativeTime);
 
 function renderStory(story) {
   return new Promise((resolve, reject) => {
-    return resolve(`<div class="column animated fadeInUp">
+    return resolve(`
+      <div class="column animated fadeInUp">
       <div class="ui flat fluid card">
       <div class="content">
       <a href="${story.url}" target="_blank" class="header">${story.title}</a>
@@ -30,21 +31,23 @@ function renderStory(story) {
       </div>
       </div>
       <div class="extra content">
-      <span class="right floated">
-      ${ story.type.charAt(0).toUpperCase() + story.type.substr(1) } 
+      <span class="right floated" style="text-transform: capitalize;">
+      ${ story.type }
       </span>
-      <i class="star icon"></i>
-      ${story.score}
+      <i class="comment alternate outline icon"></i>
+      ${story.kids ? story.kids.length : 0 }
       </div>
       </div>
-      </div>`);
+      </div>
+      `);
   });
 }
 
 function renderPagination(pageNum) {
   return new Promise((resolve, reject) => {
     // let pagesCount = topStoriesList.length/30;
-    return resolve(`<div class="ui pagination menu">
+    return resolve(`
+      <div class="ui pagination menu">
       <a class="item" onClick="renderPreviousPage()">
       &lt
       </a>
@@ -54,7 +57,8 @@ function renderPagination(pageNum) {
       <a class="item" onClick="renderNextPage()">
       &gt
       </a>
-      </div>`);
+      </div>
+      `);
   })
   .then((paginationRendered) => {
     paginationContainer.innerHTML = paginationRendered;
