@@ -141,7 +141,7 @@ function renderThese(type, page = 1) {
     break;
 
     default:
-    return getStories(`https://hacker-news.firebaseio.com/v0/jobstories.json`, skip, limit);
+    return getStories(`https://hacker-news.firebaseio.com/v0/topstories.json`, skip, limit);
     break;
   }
 }
