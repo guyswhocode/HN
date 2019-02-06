@@ -179,6 +179,54 @@ function renderNextPage() { // eslint-disable-line no-unused-vars
   });
 }
 
+function getItemsCount(url, type, obj){
+  return fetch(url)
+  .then((response) => {
+    return response.json({});
+  })
+  .then(responseJson => {
+    obj[type] = responseJson.length || 0;
+    return obj;
+  })
+  .catch(error => {
+    obj[type] = 0;
+    return Promise.resolve(obj);
+  })
+}
+
+function updateNavigation(){
+  let itemCounts = {
+    newStories: 0,
+    topStories: 0,
+    bestStories: 0,
+    ask: 0,
+    stories: 0,
+    jobs: 0
+  }
+
+  return Promise.all([
+    getItemsCount('https://hacker-news.firebaseio.com/v0/askstories.json', 'ask', itemCounts),
+    getItemsCount('https://hacker-news.firebaseio.com/v0/showstories.json', 'stories', itemCounts),
+    getItemsCount('https://hacker-news.firebaseio.com/v0/jobstories.json', 'jobs', itemCounts),
+    getItemsCount('https://hacker-news.firebaseio.com/v0/topstories.json', 'topStories', itemCounts),
+    getItemsCount('https://hacker-news.firebaseio.com/v0/newstories.json', 'newStories', itemCounts),
+    getItemsCount('https://hacker-news.firebaseio.com/v0/beststories.json', 'bestStories', itemCounts)
+    ])
+  .then((result) => {
+    document.querySelector('.new-stories .label').innerHTML = itemCounts.newStories;
+    document.querySelector('.top-stories .label').innerHTML = itemCounts.topStories;
+    document.querySelector('.best-stories .label').innerHTML = itemCounts.bestStories;
+    document.querySelector('.ask .label').innerHTML = itemCounts.ask;
+    document.querySelector('.stories .label').innerHTML = itemCounts.stories;
+    document.querySelector('.jobs .label').innerHTML = itemCounts.jobs;
+    return result;
+  })
+  .catch((error) => {
+    console.log('updateNavigation error', error);
+    return Promise.resolve();
+  })
+}
+
 function renderPreviousPage() { // eslint-disable-line no-unused-vars
   currentPage -= 1;
   document.getElementsByClassName('loading')[0].setAttribute('class', 'loader');
