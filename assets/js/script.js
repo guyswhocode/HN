@@ -240,6 +240,15 @@ function renderPreviousPage() { // eslint-disable-line no-unused-vars
   });
 }
 
+function viewComments(thread){
+  let threadElement = thread.closest(".column");
+  let commentIds = threadElement.getAttribute("data-comments").split('-');
+  renderComments(commentIds)
+  .then(commentsRendered => {
+    threadElement.getElementsByClassName("comments")[0].innerHTML = commentsRendered.join('');
+  })
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   updateNavigation()
   .then(updatedNavigation => {
