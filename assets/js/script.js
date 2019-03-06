@@ -20,9 +20,10 @@ let currentPage = 1;
 dayjs.extend(dayjs_plugin_relativeTime);
 
 function renderStory(story) {
+  let comments = story.kids || [];
   return new Promise((resolve, reject) => {
     return resolve(`
-      <div class="column animated fadeInUp">
+      <div class="column animated fadeInUp" data-threadId="${story.id}" data-comments=${comments.join("-")}>
       <div class="ui flat fluid card">
       <div class="content">
       <a href="${story.url}" target="_blank" class="header">${story.title}</a>
@@ -34,13 +35,58 @@ function renderStory(story) {
       <span class="right floated" style="text-transform: capitalize;">
       ${ story.type }
       </span>
-      <i class="comment alternate outline icon"></i>
+      <i class="comment alternate outline icon" onClick="viewComments(this)"></i>
       ${story.kids ? story.kids.length : 0 }
+      
+      <div class="ui comments">     
+      </div>
+
       </div>
       </div>
       </div>
       `);
   });
+}
+
+function renderComment(comment){
+  return `<div class="comment">
+  <a class="avatar">
+  <img src="https://api.adorable.io/avatars/20/${comment.by}.jpg">
+  </a>
+  <div class="content">
+  <a class="author">${comment.by}</a>
+  <div class="metadata">
+  <span class="date">5 Minutes ago</span>
+  </div>
+  <div class="text">
+  ${comment.text}
+  </div>
+  <div class="actions">
+  <a class="reply">Reply</a>
+  </div>
+  </div>
+  </div>`;
+}
+
+function getComment(commentId) {
+  return fetch(`https://hacker-news.firebaseio.com/v0/item/${commentId}.json`)
+  .then((res) => {
+    return res.json();
+  })
+  .then((dataParsed) => {
+    return renderComment(dataParsed);
+  })
+  .catch((error) => {
+    console.log('getStory error', error);
+  });
+}
+
+function renderComments(commentIds){
+  let commentPromises = [];
+  commentIds.forEach((commentId) => {
+    commentPromises.push(getComment(commentId));
+  })
+  return Promise.all(commentPromises);
 }
 
 function renderPagination(pageNum) {
@@ -275,3 +321,4 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('error', error);
   });
 });
+
