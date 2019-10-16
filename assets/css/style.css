@@ -86,3 +86,19 @@ body.dark{
 .dark .card .meta{
   color: #888;
 }
+
+.dark .flat .segment,
+.dark .flat .card{
+  -webkit-box-shadow: 0 4px 8px -8px #111;
+  box-shadow: 0 4px 8px -8px #111;
+  border-radius: 0px;
+  transition: 0.5s box-shadow ease-in-out;
+}
+
+.dark .flat .item.menu .item:hover,
+.dark .flat .segment:hover,
+.dark .flat .card:hover{
+  -webkit-box-shadow: 0 10px 8px -8px #222;
+  box-shadow: 0 10px 8px -8px #222;
+  border-radius: 0px;
+}
