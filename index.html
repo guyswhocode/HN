@@ -49,6 +49,9 @@
             <div class="ui small label">0</div>
             <span>Jobs</span>
           </a>
+          <a class="item" id="installApplication">
+            <span>Install App</span>
+          </a>
         </div>
       </div>
       <div class="thirteen wide column">
@@ -67,5 +70,33 @@
   <script src="https://unpkg.com/dayjs/plugin/relativeTime"></script>
   <script src="https://unpkg.com/dayjs"></script>
   <script src="./assets/js/script.js"></script>
+  <script>
+    
+    if('serviceWorker' in navigator) {
+      navigator.serviceWorker
+      .register('./sw.js')
+      .then(function() { 
+        console.log('Service Worker Registered'); 
+      });
+    }
+
+    const installButton = document.getElementById('installApplication');
+    let deferredPrompt;
+
+    if (window.matchMedia('(display-mode: standalone)').matches) {  
+      installButton.style.display = "none"; 
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installButton.addEventListener('click', (e) => {  
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          deferredPrompt = null;
+        });
+      });
+    });
+  </script>
 </body>
 </html>
