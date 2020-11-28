@@ -1,3 +1,18 @@
-title: "Hacker News by GWC"
-description: "Hacker news client by GuysWhoCode"
-avatar: "http://guyswhocode.com/HN/hn-gwc-logo.jpg"
+title: "Hacker News"
+description: "Hacker News reader by GWC"
+avatar: "https://guyswhocode.com/logo.jpg"
+baseurl: "https://guyswhocode.com"
+
+social:
+  email: guyswhocode@gmail.com
+  facebook: guyswhocode 
+  github: guyswhocode 
+  instagram: guyswhocode 
+  linkedin: guyswhocode 
+  pinterest: guyswhocode 
+  skype: guyswhocode 
+  twitter: guyswhoc0de 
+  youtube: guyswhocode 
+  rss: # just type anything here for a working RSS icon
+  stackoverflow: # your stackoverflow profile, e.g. "users/50476/bart-kiers"
+  googleplus: # anything in your profile username that comes after plus.google.com/
