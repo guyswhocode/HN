@@ -24,6 +24,7 @@
   background-color: #33bb77;  
   animation: loading 2s linear infinite;
 }
+
 @keyframes loading {
     from {left: -200px; width: 30%;}
     50% {width: 30%;}
