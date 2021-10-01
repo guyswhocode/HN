@@ -2,17 +2,6 @@ const newsContainer = document.getElementById('news-container');
 const paginationContainer = document.getElementById('pagination-container');
 const feedTypes = document.querySelectorAll('[data-feedtype]');
 const topStoriesContainer = document.getElementById('top-stories');
-
-// const sampleStoryData = {
-//   url: 'sample-url',
-//   title: 'Sample title',
-//   by: 'Author',
-//   time: new Date(),
-//   type: 'story',
-//   score: 124,
-// };
-
-
 let topStoriesList = [];
 let currentCategoty = 'newstories';
 let currentPage = 1;
