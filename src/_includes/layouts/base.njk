@@ -1,4 +1,4 @@
-{% set base = '../' if '/user/' in page.url or '/item/' in page.url else './' %}
+{% set base = '../' if '/user/' in page.url or '/item/' in page.url or '/bookmark/' in page.url else './' %}
 <html class="dark" lang="en">
     <head>
         <meta charset="utf-8" />
@@ -44,7 +44,9 @@
     <body
         class="bg-background dark:bg-on-background text-on-surface dark:text-inverse-on-surface font-body selection:bg-primary-container selection:text-on-primary-container"
     >
-        {% include "components/navbar.njk" %} {{ content | safe }} {% include
-        "components/footer.njk" %}
+        {% include "components/navbar.njk" %}
+        {% include "components/shared-logic.njk" %}
+        {{ content | safe }}
+        {% include "components/footer.njk" %}
     </body>
 </html>

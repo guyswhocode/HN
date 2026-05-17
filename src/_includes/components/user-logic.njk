@@ -1,5 +1,4 @@
 <script>
-    const BASE_URL = "https://hacker-news.firebaseio.com/v0";
     const ITEMS_PER_PAGE = 20;
 
     const userHeader = document.getElementById("user-header");
@@ -12,28 +11,8 @@
     let currentItemIndex = 0;
 
     async function fetchUser(id) {
-        const response = await fetch(`${BASE_URL}/user/${id}.json`);
+        const response = await fetch(`${API_BASE_URL}/user/${id}.json`);
         return await response.json();
-    }
-
-    async function fetchItem(id) {
-        const response = await fetch(`${BASE_URL}/item/${id}.json`);
-        return await response.json();
-    }
-
-    function timeAgo(timestamp) {
-        const seconds = Math.floor((new Date() - timestamp * 1000) / 1000);
-        let interval = seconds / 31536000;
-        if (interval > 1) return Math.floor(interval) + " Y";
-        interval = seconds / 2592000;
-        if (interval > 1) return Math.floor(interval) + " M";
-        interval = seconds / 86400;
-        if (interval > 1) return Math.floor(interval) + " D";
-        interval = seconds / 3600;
-        if (interval > 1) return Math.floor(interval) + " H";
-        interval = seconds / 60;
-        if (interval > 1) return Math.floor(interval) + " M";
-        return Math.floor(seconds) + " S";
     }
 
     function formatDate(timestamp) {

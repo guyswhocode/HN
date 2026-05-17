@@ -44,6 +44,10 @@
     background-color: rgba(43, 151, 32, 0.15) !important;
 }
 
+.material-symbols-filled {
+    font-variation-settings: "FILL" 1;
+}
+
 @keyframes loading {
     0% {
         background-position: 200% 0;

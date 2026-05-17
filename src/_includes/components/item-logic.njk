@@ -1,5 +1,4 @@
 <script>
-    const BASE_URL = "https://hacker-news.firebaseio.com/v0";
     const COMMENTS_PER_PAGE = 5;
 
     const storyDetail = document.getElementById("story-detail");
@@ -10,37 +9,9 @@
     let currentCommentIndex = 0;
     let loadMoreBtn = null;
 
-    async function fetchItem(id) {
-        const response = await fetch(`${BASE_URL}/item/${id}.json`);
-        return await response.json();
-    }
-
-    function timeAgo(timestamp) {
-        const seconds = Math.floor((new Date() - timestamp * 1000) / 1000);
-        let interval = seconds / 31536000;
-        if (interval > 1) return Math.floor(interval) + " Y";
-        interval = seconds / 2592000;
-        if (interval > 1) return Math.floor(interval) + " M";
-        interval = seconds / 86400;
-        if (interval > 1) return Math.floor(interval) + " D";
-        interval = seconds / 3600;
-        if (interval > 1) return Math.floor(interval) + " H";
-        interval = seconds / 60;
-        if (interval > 1) return Math.floor(interval) + " M";
-        return Math.floor(seconds) + " S";
-    }
-
-    function getDomain(url) {
-        if (!url) return "";
-        try {
-            const domain = new URL(url).hostname;
-            return `(${domain})`;
-        } catch (e) {
-            return "";
-        }
-    }
-
     function renderStory(story) {
+        const isStoryBookmarked = isBookmarked(story.id);
+
         storyDetail.innerHTML = `
     <h1 class="text-3xl font-headline font-bold tracking-tight mb-2">
       <a href="${story.url || "#"}" target="_blank" class="hover:text-primary transition-colors">${story.title}</a>
@@ -57,9 +28,30 @@
             <span class="material-symbols-outlined text-[14px]">schedule</span>
             ${timeAgo(story.time)}
         </span>
+        <button class="bookmark-btn flex items-center gap-1 hover:text-primary transition-colors" data-id="${story.id}">
+            <span class="material-symbols-outlined !text-[16px] ${isStoryBookmarked ? "material-symbols-filled" : ""}">
+                bookmark
+            </span>
+            <span>${isStoryBookmarked ? "Bookmarked" : "Bookmark"}</span>
+        </button>
     </div>
     ${story.text ? `<div class="mt-6 text-sm text-on-surface dark:text-inverse-on-surface prose dark:prose-invert max-w-none">${story.text}</div>` : ""}
   `;
+
+        const bookmarkBtn = storyDetail.querySelector(".bookmark-btn");
+        bookmarkBtn.addEventListener("click", () => {
+            const added = toggleBookmark(story.id);
+            const icon = bookmarkBtn.querySelector(".material-symbols-outlined");
+            const text = bookmarkBtn.querySelector("span:not(.material-symbols-outlined)");
+
+            if (added) {
+                icon.classList.add("material-symbols-filled");
+                text.textContent = "Bookmarked";
+            } else {
+                icon.classList.remove("material-symbols-filled");
+                text.textContent = "Bookmark";
+            }
+        });
 
         commentCountLabel.textContent = `${story.descendants || 0} Comments`;
     }

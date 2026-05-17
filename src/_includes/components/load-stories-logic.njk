@@ -1,5 +1,4 @@
 <script>
-    const API_BASE_URL = "https://hacker-news.firebaseio.com/v0";
     const ITEMS_PER_PAGE = 20;
     const TYPE_MAP = {
         new: "newstories",
@@ -25,40 +24,12 @@
         return await response.json();
     }
 
-    async function fetchItem(id) {
-        const response = await fetch(`${API_BASE_URL}/item/${id}.json`);
-        return await response.json();
-    }
-
-    function timeAgo(timestamp) {
-        const seconds = Math.floor((new Date() - timestamp * 1000) / 1000);
-        let interval = seconds / 31536000;
-        if (interval > 1) return Math.floor(interval) + " Y";
-        interval = seconds / 2592000;
-        if (interval > 1) return Math.floor(interval) + " M";
-        interval = seconds / 86400;
-        if (interval > 1) return Math.floor(interval) + " D";
-        interval = seconds / 3600;
-        if (interval > 1) return Math.floor(interval) + " H";
-        interval = seconds / 60;
-        if (interval > 1) return Math.floor(interval) + " M";
-        return Math.floor(seconds) + " S";
-    }
-
-    function getDomain(url) {
-        if (!url) return "";
-        try {
-            const domain = new URL(url).hostname;
-            return `(${domain})`;
-        } catch (e) {
-            return "";
-        }
-    }
-
     function createStoryElement(story, index) {
         const absoluteIndex = currentPage * ITEMS_PER_PAGE + index + 1;
         const formattedIndex =
             absoluteIndex < 10 ? `0${absoluteIndex}` : absoluteIndex;
+
+        const isStoryBookmarked = isBookmarked(story.id);
 
         const article = document.createElement("article");
         article.className =
@@ -94,11 +65,31 @@
                 <span class="material-symbols-outlined !text-[12px]">chat</span>
                 ${story.descendants || 0}
             </a>
+            <button class="bookmark-btn cursor-pointer flex items-center gap-1 hover:text-primary transition-colors" data-id="${story.id}">
+                <span class="material-symbols-outlined !text-[14px] ${isStoryBookmarked ? "material-symbols-filled" : ""}">
+                    bookmark
+                </span>
+            </button>
         </div>
     </div>
 `;
         return article;
     }
+
+    // Event Delegation for Bookmarks
+    feedContainer.addEventListener("click", (e) => {
+        const bookmarkBtn = e.target.closest(".bookmark-btn");
+        if (bookmarkBtn) {
+            const id = parseInt(bookmarkBtn.dataset.id);
+            const added = toggleBookmark(id);
+            const icon = bookmarkBtn.querySelector(".material-symbols-outlined");
+            if (added) {
+                icon.classList.add("material-symbols-filled");
+            } else {
+                icon.classList.remove("material-symbols-filled");
+            }
+        }
+    });
 
     async function loadStories(append = false) {
         if (!append) {
